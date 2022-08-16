@@ -4,6 +4,7 @@ void main() {
   runApp(MaterialApp(
     // home: TapboxA(),
     // home: ParentWidge(),
+    home: ParentWidgetC(),
   ));
 }
 
@@ -104,6 +105,94 @@ class TapBoxB extends StatelessWidget {
             style: const TextStyle(fontSize: 32.0, color: Colors.white),
           ),
         ),
+      ),
+    );
+  }
+}
+
+//=========================================
+//=====multi state manager=================
+class ParentWidgetC extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ParentWidgetCState();
+}
+
+class _ParentWidgetCState extends State<ParentWidgetC> {
+  bool _active = false;
+
+  void _handleTapboxChanged(bool newValue) {
+    setState(() {
+      _active = newValue;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: TapboxC(
+        active: _active,
+        onChanged: _handleTapboxChanged,
+      ),
+    );
+  }
+}
+
+class TapboxC extends StatefulWidget {
+  TapboxC({Key? key, this.active: false, required this.onChanged})
+      : super(key: key);
+  final bool active;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  State<StatefulWidget> createState() => _TapboxCState();
+}
+
+class _TapboxCState extends State<TapboxC> {
+  bool _hightlight = false;
+
+  void _handleTapDown(TapDownDetails details) {
+    setState(() {
+      _hightlight = true;
+    });
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    setState(() {
+      _hightlight = false;
+    });
+  }
+
+  void _handleTapCancel() {
+    setState(() {
+      _hightlight = false;
+    });
+  }
+
+  void _handleTap() {
+    widget.onChanged(!widget.active);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTapCancel: _handleTapCancel,
+      onTap: _handleTap,
+      child: Container(
+        child: Center(
+          child: Text(
+            widget.active ? "Active3" : "Inactive3",
+            style: TextStyle(fontSize: 32, color: Colors.white),
+          ),
+        ),
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+            color: widget.active ? Colors.lightGreen[700] : Colors.grey[600],
+            border: _hightlight
+                ? Border.all(color: Colors.teal[700]!, width: 0)
+                : null),
       ),
     );
   }

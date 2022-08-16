@@ -279,6 +279,12 @@ extension ParseNumber on String {
     print("999");
   }
 }
+extension E on int{
+  int get a => 1;
+}
+extension Ea on int {
+  int get a => 0;
+}
 void extensionTest(){
   "999".toSpecialString();
   "999".toInt();
